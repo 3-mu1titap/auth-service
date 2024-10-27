@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-### 📅 {{ page.date | date: "%Y-%m-%d" }}
+### 📅 {{ site.time | date: "%Y-%m-%d" }}
 ### 📢 About
 
 ### 📜 To do
