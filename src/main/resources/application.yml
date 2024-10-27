@@ -1,7 +1,12 @@
-Server:
-  port: 0
-
 spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth
+    username: root
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   application:
     name: auth-service
 
@@ -13,6 +18,19 @@ spring:
       hibernate:
         format_sql: true
 
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-validity: ${JWT_AT}  # 1??
+    refresh-token-validity: ${JWT_RT} # ???
+
+  security:
+    user:
+      name: root
+      password: 1234
+
+server:
+  port: 0
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -21,4 +39,3 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
