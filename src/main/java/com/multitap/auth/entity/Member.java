@@ -1,20 +1,20 @@
-package com.multitap.auth.auth.domain;
+package com.multitap.auth.entity;
 
 import com.multitap.auth.common.response.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String memberUuid;
+    private String uuid;
 
     @Column(nullable = false)
     private String name;
@@ -34,5 +34,17 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Builder
+    public Member(Long id, String uuid, String name, String nickName, String email, String password, String phoneNumber, Role role) {
+        this.id = id;
+        this.uuid = uuid;
+        this.name = name;
+        this.nickName = nickName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
 
 }

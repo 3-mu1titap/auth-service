@@ -1,4 +1,4 @@
-package com.multitap.auth.auth.domain;
+package com.multitap.auth.entity;
 
 public enum Role {
     MENTEE,

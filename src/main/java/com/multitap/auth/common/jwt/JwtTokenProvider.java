@@ -1,5 +1,8 @@
 package com.multitap.auth.common.jwt;
 
+import com.multitap.auth.dto.out.SignInResponseDto;
+import com.multitap.auth.entity.AuthUserDetail;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -29,22 +32,24 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(secret.getBytes()); // 비밀 키를 사용을 통한 키 생성
     }
 
-    public String generateAccessToken() {
+    public SignInResponseDto generateToken(AuthUserDetail authUserDetail) {
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + accessTokenValidityInMilliseconds);
+        Date accessTokenExpiration = new Date(now.getTime() + accessTokenValidityInMilliseconds);
+        Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+        Claims claims = Jwts.claims().subject(String.valueOf(authUserDetail.getRole())).build();
 
-        return Jwts.builder()
-                .signWith(getSignKey()).issuedAt(now).expiration(expiration)
-                .compact();
-    }
+        String accessToken = Jwts.builder()
+                .signWith(getSignKey()).claims(claims).issuedAt(now).expiration(accessTokenExpiration).compact();
 
-    public String generateRefreshToken() {
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+        String refreshToken = Jwts.builder()
+                .signWith(getSignKey()).issuedAt(now).expiration(refreshTokenExpiration).compact();
 
-        return Jwts.builder()
-                .signWith(getSignKey()).issuedAt(now).expiration(expiration)
-                .compact();
+        return SignInResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .uuid(authUserDetail.getUuid())
+                .build();
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.multitap.auth.auth.domain;
+package com.multitap.auth.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,17 +14,20 @@ import java.util.Collections;
 @Slf4j
 @Getter
 @NoArgsConstructor
-public class AuthUserDetails implements UserDetails {
+public class AuthUserDetail implements UserDetails {
 
     private String email;
     private String password;
     private Role role;
+    private String uuid;
 
     @Builder
-    public AuthUserDetails(Member member) {
+    public AuthUserDetail(Member member) {
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.role = member.getRole();
+        this.uuid = member.getUuid();
+
     }
 
     @Override

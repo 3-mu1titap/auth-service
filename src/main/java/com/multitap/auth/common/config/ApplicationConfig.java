@@ -1,6 +1,7 @@
 package com.multitap.auth.common.config;
 
-import com.multitap.auth.auth.application.AuthUserDetailServiceImpl;
+import com.multitap.auth.application.AuthUserDetailService;
+import com.multitap.auth.provider.OAuthAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,19 +13,21 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 @Configuration
 public class ApplicationConfig {
 
-    private final AuthUserDetailServiceImpl authUserDetailService;
-//    private final OAuthAuthenticationProvider oAuthAuthenticationProvider;
+    private final OAuthAuthenticationProvider oAuthAuthenticationProvider;
+    private final AuthUserDetailService authUserDetailService;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return new ProviderManager(
-                daoAuthenticationProvider()
-        );
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
+        return new ProviderManager(Arrays.asList(
+                daoAuthenticationProvider(),
+                oAuthAuthenticationProvider
+        ));
     }
 
     @Bean
