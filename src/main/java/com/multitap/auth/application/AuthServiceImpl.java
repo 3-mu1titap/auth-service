@@ -35,28 +35,19 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
-        try {
-            memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
+        if (memberRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_USER);
         }
-
+        memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
     }
 
     @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
 
         Member member = memberRepository.findByEmail(signInRequestDto.getEmail()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN)
-        );
+                () -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
-        try {
-            return createToken(authenticate(member, signInRequestDto.getPassword()));
-
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
-        }
-
+        return createToken(authenticate(member, signInRequestDto.getPassword()));
     }
 
     @Override

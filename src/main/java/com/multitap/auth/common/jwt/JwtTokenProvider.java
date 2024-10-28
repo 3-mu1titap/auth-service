@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+
 import java.security.Key;
+import java.security.SecureRandom;
 import java.util.Date;
 
 
@@ -29,7 +31,10 @@ public class JwtTokenProvider {
     private String secret;
 
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes()); // 비밀 키를 사용을 통한 키 생성
+        byte[] keyBytes = new byte[32];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(keyBytes);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public SignInResponseDto generateToken(AuthUserDetail authUserDetail) {
