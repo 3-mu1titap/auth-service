@@ -25,11 +25,11 @@ spring:
 
   security:
     user:
-      name: admin      # 기본 사용자 이름
-      password: 1234   # 기본 사용자 비밀번호
+      name: admin
+      password: 1234
 
 server:
-  port: 8080  # 포트를 8080으로 설정
+  port: 8080
 
 eureka:
   instance:

@@ -10,6 +10,7 @@ import com.multitap.auth.vo.in.SignInRequestVo;
 import com.multitap.auth.vo.in.SignUpRequestVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "계정 관리 API", description = "계정 관련 API endpoints")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -52,7 +54,7 @@ public class AuthController {
         );
     }
 
-    @Operation(summary = "소셜 로그인", description = "소셜 로그인 기능입니다.", tags = {"AuthUserDetail"})
+    @Operation(summary = "소셜 로그인", description = "소셜 로그인 기능입니다.")
     @PostMapping("/oauth-sign-in")
     public BaseResponse<SignInResponseVo> oAuthSignIn(
             @RequestBody OAuthSignInRequestVo oAuthSignInRequestVo) {
@@ -61,6 +63,5 @@ public class AuthController {
                 authService.oAuthSignIn(OAuthSignInRequestDto.of(oAuthSignInRequestVo)).toVo()
         );
     }
-
 
 }
