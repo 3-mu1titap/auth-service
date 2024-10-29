@@ -29,7 +29,7 @@ public class SignInResponseDto {
                 .build();
     }
 
-    public static SignInResponseDto from(Member member, String accessToken, String refreshToken) {
+    public static SignInResponseDto of(Member member, String accessToken, String refreshToken) {
         return SignInResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

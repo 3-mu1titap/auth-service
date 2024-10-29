@@ -17,6 +17,7 @@ import java.util.Collections;
 public class AuthUserDetail implements UserDetails {
 
     private String email;
+    private String accountId;
     private String password;
     private Role role;
     private String uuid;
@@ -24,6 +25,7 @@ public class AuthUserDetail implements UserDetails {
     @Builder
     public AuthUserDetail(Member member) {
         this.email = member.getEmail();
+        this.accountId = member.getAccountId();
         this.password = member.getPassword();
         this.role = member.getRole();
         this.uuid = member.getUuid();

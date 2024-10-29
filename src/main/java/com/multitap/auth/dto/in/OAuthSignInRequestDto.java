@@ -33,11 +33,11 @@ public class OAuthSignInRequestDto {
                 .build();
     }
 
-    public static OAuthSignInRequestDto of(OAuthSignInRequestVo vo) {
+    public static OAuthSignInRequestDto from(OAuthSignInRequestVo oAuthSignInRequestVo) {
         return OAuthSignInRequestDto.builder()
-                .provider(vo.getProvider())
-                .providerId(vo.getProviderId())
-                .email(vo.getProviderEmail())
+                .provider(oAuthSignInRequestVo.getProvider())
+                .providerId(oAuthSignInRequestVo.getProviderId())
+                .email(oAuthSignInRequestVo.getProviderEmail())
                 .build();
     }
 

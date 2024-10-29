@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +45,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
 
-        Member member = memberRepository.findByEmail(signInRequestDto.getEmail()).orElseThrow(
+        Member member = memberRepository.findByAccountId(signInRequestDto.getAccountId()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
+
+        if (!new BCryptPasswordEncoder().matches(signInRequestDto.getPassword(), member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
+        }
 
         return createToken(authenticate(member, signInRequestDto.getPassword()));
     }
@@ -54,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
     public SignInResponseDto oAuthSignIn(OAuthSignInRequestDto oAuthSignInRequestDto) {
 
         Member member = memberRepository.findByEmail(oAuthSignInRequestDto.getEmail()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
+                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER) // 회원가입 페이지로 이동
         );
 
         oAuthRepository.findByMemberUuid(member.getUuid()).orElseGet(
@@ -62,7 +67,6 @@ public class AuthServiceImpl implements AuthService {
         );
 
         return createToken(oAuthAuthenticate(member));
-
     }
 
     private SignInResponseDto createToken(Authentication authentication) {
@@ -74,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         AuthUserDetail authUserDetail = new AuthUserDetail(member);
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authUserDetail.getUsername(),
+                        authUserDetail.getAccountId(),
                         inputPassword
                 )
         );

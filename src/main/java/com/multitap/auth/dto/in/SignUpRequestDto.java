@@ -20,15 +20,17 @@ public class SignUpRequestDto {
     private String name;
     private String nickName;
     private String email;
+    private String accountId;
     private String password;
     private String phoneNumber;
     private Role role;
 
     @Builder
-    public SignUpRequestDto(String name, String nickName, String email, String password, String phoneNumber, Role role) {
+    public SignUpRequestDto(String name, String nickName, String email, String accountId, String password, String phoneNumber, Role role) {
         this.name = name;
         this.nickName = nickName;
         this.email = email;
+        this.accountId = accountId;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
@@ -40,6 +42,7 @@ public class SignUpRequestDto {
                 .name(name)
                 .nickName(nickName)
                 .email(email)
+                .accountId(accountId)
                 .password(passwordEncoder.encode(password))
                 .phoneNumber(phoneNumber)
                 .role(role)
@@ -51,6 +54,7 @@ public class SignUpRequestDto {
                 .name(signUpRequestVo.getName())
                 .nickName(signUpRequestVo.getNickName())
                 .email(signUpRequestVo.getEmail())
+                .accountId(signUpRequestVo.getAccountId())
                 .password(signUpRequestVo.getPassword())
                 .phoneNumber(signUpRequestVo.getPhoneNumber())
                 .role(signUpRequestVo.getRole())

@@ -9,4 +9,5 @@ public interface AuthService {
     void signUp(SignUpRequestDto signUpRequestDto);
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
     SignInResponseDto oAuthSignIn(OAuthSignInRequestDto oAuthSignInRequestDto);
+
 }

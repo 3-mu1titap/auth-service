@@ -19,7 +19,10 @@ public class SignUpRequestVo {
     @Schema(description = "이메일", example = "test1234@gmail.com")
     private String email;
 
-    @Schema(description = "비밀번호", example = "!test1234")
+    @Schema(description = "아이디", example = "jerry0720")
+    private String accountId;
+
+    @Schema(description = "비밀번호", example = "jerry0720!")
     private String password;
 
     @Schema(description = "전화번호", example = "01012341234")
@@ -29,10 +32,11 @@ public class SignUpRequestVo {
     private Role role;
 
     @Builder
-    public SignUpRequestVo(String name, String nickName, String email, String password, String phoneNumber, Role role) {
+    public SignUpRequestVo(String name, String nickName, String email, String accountId, String password, String phoneNumber, Role role) {
         this.name = name;
         this.nickName = nickName;
         this.email = email;
+        this.accountId = accountId;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;

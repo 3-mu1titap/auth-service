@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class SignInRequestVo {
 
-    @Schema(description = "이메일", example = "test1234@gmail.com")
-    private String email;
+    @Schema(description = "아이디", example = "jerry0720")
+    private String accountId;
 
-    @Schema(description = "비밀번호", example = "!test1234")
+    @Schema(description = "비밀번호", example = "jerry0720!")
     private String password;
 }

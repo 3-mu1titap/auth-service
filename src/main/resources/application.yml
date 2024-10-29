@@ -6,10 +6,8 @@ spring:
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   application:
     name: auth-service
-
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -17,16 +15,22 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   jwt:
     secret: jerry
     access-token-validity: 3600000
     refresh-token-validity: 604800000
-
   security:
     user:
       name: admin
       password: 1234
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tnbin98@gmail.com
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 server:
   port: 8080
