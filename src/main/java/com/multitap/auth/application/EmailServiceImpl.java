@@ -3,7 +3,8 @@ package com.multitap.auth.application;
 import com.multitap.auth.common.exception.BaseException;
 import com.multitap.auth.common.response.BaseResponseStatus;
 import com.multitap.auth.dto.in.AuthCodeRequestDto;
-import com.multitap.auth.dto.in.PasswordResetRequestDto;
+import com.multitap.auth.dto.in.FindPasswordRequestDto;
+import com.multitap.auth.dto.in.UuidRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.infrastructure.MemberRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,36 +26,40 @@ public class EmailServiceImpl implements EmailService {
 
     // 임시 비밀번호 전송
     @Override
-    public void sendPasswordResetEmail(PasswordResetRequestDto passwordResetRequestDto) {
-        Member member = memberRepository.findByEmail(passwordResetRequestDto.getAccountId()).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+    public void sendTemporaryPasswordEmail(FindPasswordRequestDto findPasswordRequestDto) {
+        Member member = memberRepository.findByAccountId(findPasswordRequestDto.getAccountId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        // 임시 비밀번호로 password 변경
-        String temporaryPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-        memberRepository.save(passwordResetRequestDto.changeTemporaryPassword(passwordEncoder, member, temporaryPassword));
-
-        sendTemporaryPasswordEmail(member.getEmail(), temporaryPassword);
+        // 임시 비밀번호 생성 및 저장
+        String temporaryPassword = generateTemporaryPassword();
+        memberRepository.save(findPasswordRequestDto.changeTemporaryPassword(passwordEncoder, member, temporaryPassword));
+        sendTemporaryPasswordToEmail(member.getEmail(), temporaryPassword);
     }
 
     // 인증코드 전송
     @Override
-    public void sendAuthCodeEmail(HttpSession session) {
-        String email = (String) session.getAttribute("email");
-        String authCode = (String) session.getAttribute("authCode");
-        sendAuthCodeEmail(email, authCode);
+    public void sendAuthCodeEmailToSession(UuidRequestDto uuidRequestDto, HttpSession session) {
+        Member member = memberRepository.findByUuid(uuidRequestDto.getUuid())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
+        String authCode = generateAuthCode();
+        session.setAttribute("authCode", authCode);
+        session.setAttribute("email", member.getEmail());
+
+        sendAuthCodeEmailToUser(member.getEmail(), authCode);
     }
 
     // 인증코드 검증
     @Override
     public void verifyAuthCode(AuthCodeRequestDto authCodeRequestDto, HttpSession session) {
-        String authCode = (String) session.getAttribute("authCode");
-        if (authCode == null || !authCode.equals(authCodeRequestDto.getAuthCode())) {
+        String sessionAuthCode = (String) session.getAttribute("authCode");
+        if (sessionAuthCode == null || !sessionAuthCode.equals(authCodeRequestDto.getAuthCode())) {
             throw new BaseException(BaseResponseStatus.AUTH_CODE_INVALID);
         }
     }
 
-    @Override
-    public void sendTemporaryPasswordEmail(String email, String temporaryPassword) {
-
+    // 임시 비밀번호 이메일 전송
+    public void sendTemporaryPasswordToEmail(String email, String temporaryPassword) {
         String subject = "임시 비밀번호 발급";
         String body = "귀하의 임시 비밀번호는 다음과 같습니다: " + temporaryPassword + "\n로그인 후 비밀번호를 변경해주세요.";
         SimpleMailMessage message = new SimpleMailMessage();
@@ -64,18 +69,24 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(message);
     }
 
-    @Override
-    public void sendAuthCodeEmail(String email, String authCode) {
-
+    // 인증코드 이메일 전송
+    public void sendAuthCodeEmailToUser(String email, String authCode) {
         String subject = "비밀번호 변경 인증코드";
         String body = "귀하의 인증코드는 " + authCode + "입니다.";
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject(subject);
         message.setText(body);
+        javaMailSender.send(message);
     }
 
+    // 임시 비밀번호 생성
+    private String generateTemporaryPassword() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+    }
 
+    // 인증코드 생성
+    private String generateAuthCode() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+    }
 }
-
-

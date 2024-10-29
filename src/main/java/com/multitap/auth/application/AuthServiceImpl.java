@@ -1,8 +1,7 @@
 package com.multitap.auth.application;
 
-import com.multitap.auth.dto.in.OAuthSignInRequestDto;
-import com.multitap.auth.dto.in.SignInRequestDto;
-import com.multitap.auth.dto.in.SignUpRequestDto;
+import com.multitap.auth.dto.in.*;
+import com.multitap.auth.dto.out.FindIdResponseDto;
 import com.multitap.auth.dto.out.SignInResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.entity.Member;
@@ -68,6 +67,30 @@ public class AuthServiceImpl implements AuthService {
 
         return createToken(oAuthAuthenticate(member));
     }
+
+    //todo: 로그아웃 시  토큰 블랙리스트 등록, 비밀번호 재설정 시 토큰 블랙리스트 등록, 아이디 찾기 구현 +) 회원 탈퇴 구현
+    @Override
+    public void signOut() {
+
+    }
+
+    @Override
+    public FindIdResponseDto findId(FindIdRequestDto findIdRequestDto) {
+        Member member = memberRepository.findByEmail(findIdRequestDto.getEmail()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.INVALID_EMAIL_ADDRESS)
+        );
+        return FindIdResponseDto.from(member);
+    }
+
+
+    @Override
+    public void changePassword(PasswordChangeRequestDto passwordChangeRequestDto) {
+        Member member = memberRepository.findByUuid(passwordChangeRequestDto.getUuid()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
+        );
+        memberRepository.save(passwordChangeRequestDto.toEntity(passwordChangeRequestDto, member, passwordEncoder));
+    }
+
 
     private SignInResponseDto createToken(Authentication authentication) {
         AuthUserDetail authUserDetail = (AuthUserDetail) authentication.getPrincipal();

@@ -1,13 +1,14 @@
 package com.multitap.auth.application;
 
 import com.multitap.auth.dto.in.AuthCodeRequestDto;
-import com.multitap.auth.dto.in.PasswordResetRequestDto;
+import com.multitap.auth.dto.in.FindPasswordRequestDto;
+import com.multitap.auth.dto.in.UuidRequestDto;
 import jakarta.servlet.http.HttpSession;
 
 public interface EmailService {
-    void sendPasswordResetEmail(PasswordResetRequestDto passwordResetRequestDto);
-    void sendAuthCodeEmail(HttpSession session);
+    void sendTemporaryPasswordEmail(FindPasswordRequestDto findPasswordRequestDto);
+    void sendAuthCodeEmailToSession(UuidRequestDto uuidRequestDto, HttpSession session);
     void verifyAuthCode(AuthCodeRequestDto authCodeRequestDto, HttpSession session);
-    void sendTemporaryPasswordEmail(String email, String temporaryPassword);
-    void sendAuthCodeEmail(String email,String authCode);
+    void sendTemporaryPasswordToEmail(String email, String temporaryPassword);
+    void sendAuthCodeEmailToUser(String email, String authCode);
 }

@@ -6,6 +6,7 @@ import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
 import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.vo.in.*;
+import com.multitap.auth.vo.out.FindIdResponseVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @Tag(name = "계정 관리 API", description = "계정 관련 API endpoints")
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ import java.util.UUID;
 public class AuthController {
 
     private final AuthService authService;
-
     private final EmailService emailService;
 
     @Operation(summary = "회원가입", description = "회원가입 기능입니다.")
@@ -50,19 +48,32 @@ public class AuthController {
         return new BaseResponse<>(authService.oAuthSignIn(OAuthSignInRequestDto.from(oAuthSignInRequestVo)).toVo());
     }
 
+    //todo: kafka를 통한 token 블랙 리스트 구현
+    // @Operation(summary = "로그아웃", description = "로그아웃 기능입니다.")
+    // @PostMapping("/sign-out")
+    // public BaseResponse<Void> signOut(@AuthenticationPrincipal AuthUserDetail authUserDetail) {
+    //     authService.signOut(authUserDetail.getMemberUuid());
+    //     return new BaseResponse<>();
+    // }
+
+    @Operation(summary = "아이디 찾기", description = "이메일 인증을 통해 아이디를 찾습니다.")
+    @PostMapping("/find-id")
+    public BaseResponse<FindIdResponseVo> findId(@RequestBody FindIdRequestVo findIdRequestVo) {
+        authService.findId(FindIdRequestDto.from(findIdRequestVo));
+        return new BaseResponse<>(authService.findId(FindIdRequestDto.from(findIdRequestVo)).toVo());
+    }
+
     @Operation(summary = "비밀번호 찾기", description = "이메일 인증을 통해 임시 비밀번호를 발급 받습니다.")
     @PostMapping("/password-reset")
-    public BaseResponse<Void> resetPassword(@RequestBody PasswordResetRequestVo passwordResetRequestVo) {
-        emailService.sendPasswordResetEmail(PasswordResetRequestDto.from(passwordResetRequestVo));
+    public BaseResponse<Void> resetPassword(@RequestBody FindPasswordRequestVo findPasswordRequestVo) {
+        emailService.sendTemporaryPasswordEmail(FindPasswordRequestDto.from(findPasswordRequestVo));
         return new BaseResponse<>();
     }
 
     @Operation(summary = "비밀번호 변경 인증 요청", description = "요청을 통해 이메일로 인증코드를 보냅니다.")
     @PostMapping("/password-change")
-    public BaseResponse<Void> changePassword(HttpSession session, @AuthenticationPrincipal AuthUserDetail authUserDetail) {
-        session.setAttribute("authCode", UUID.randomUUID().toString().substring(0, 6));
-        session.setAttribute("email", authUserDetail.getEmail());
-        emailService.sendAuthCodeEmail(session);
+    public BaseResponse<Void> changePassword(@RequestBody UuidRequestVo uuidRequestVo, HttpSession session) {
+        emailService.sendAuthCodeEmailToSession(UuidRequestDto.from(uuidRequestVo), session);
         return new BaseResponse<>();
     }
 
@@ -73,13 +84,13 @@ public class AuthController {
         return new BaseResponse<>();
     }
 
+    //todo: 기존 비밀번호도 requestbody로 받아야 하는지 front에서 처리 가능한지?
     @Operation(summary = "비밀번호 변경", description = "인증코드로 인증 후 비밀번호를 변경합니다.")
     @PostMapping("/change-password")
     public BaseResponse<Void> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequestDto, HttpSession session, @AuthenticationPrincipal AuthUserDetail authUserDetail) {
         session.removeAttribute("email");
         session.removeAttribute("authCode"); // 인증 코드 제거
-        emailService.changePassword(passwordRequestDto, authUserDetails.getMemberUuid());
+        authService.changePassword(passwordChangeRequestDto);
         return new BaseResponse<>();
     }
-
 }

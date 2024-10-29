@@ -1,23 +1,23 @@
 package com.multitap.auth.dto.in;
 
 import com.multitap.auth.entity.Member;
-import com.multitap.auth.vo.in.PasswordResetRequestVo;
+import com.multitap.auth.vo.in.FindPasswordRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class PasswordResetRequestDto {
+public class FindPasswordRequestDto {
     private String accountId;
 
     @Builder
-    public PasswordResetRequestDto(String accountId) {
+    public FindPasswordRequestDto(String accountId) {
         this.accountId = accountId;
     }
 
-    public static PasswordResetRequestDto from(PasswordResetRequestVo passwordResetRequestVo) {
-        return PasswordResetRequestDto.builder()
-                .accountId(passwordResetRequestVo.getAccountId())
+    public static FindPasswordRequestDto from(FindPasswordRequestVo findPasswordRequestVo) {
+        return FindPasswordRequestDto.builder()
+                .accountId(findPasswordRequestVo.getAccountId())
                 .build();
     }
 
