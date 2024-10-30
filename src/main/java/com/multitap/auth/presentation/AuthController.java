@@ -58,39 +58,31 @@ public class AuthController {
 
     @Operation(summary = "아이디 찾기", description = "이메일 인증을 통해 아이디를 찾습니다.")
     @PostMapping("/find-id")
-    public BaseResponse<FindIdResponseVo> findId(@RequestBody FindIdRequestVo findIdRequestVo) {
-        authService.findId(FindIdRequestDto.from(findIdRequestVo));
-        return new BaseResponse<>(authService.findId(FindIdRequestDto.from(findIdRequestVo)).toVo());
+    public BaseResponse<Void> findId(@RequestBody FindIdRequestVo findIdRequestVo) {
+        emailService.sendAccountIdEmail(FindIdRequestDto.from(findIdRequestVo));
+        return new BaseResponse<>();
     }
 
     @Operation(summary = "비밀번호 찾기", description = "이메일 인증을 통해 임시 비밀번호를 발급 받습니다.")
-    @PostMapping("/password-reset")
+    @PostMapping("/reset-password")
     public BaseResponse<Void> resetPassword(@RequestBody FindPasswordRequestVo findPasswordRequestVo) {
         emailService.sendTemporaryPasswordEmail(FindPasswordRequestDto.from(findPasswordRequestVo));
         return new BaseResponse<>();
     }
 
-    @Operation(summary = "비밀번호 변경 인증 요청", description = "요청을 통해 이메일로 인증코드를 보냅니다.")
-    @PostMapping("/password-change")
-    public BaseResponse<Void> changePassword(@RequestBody UuidRequestVo uuidRequestVo, HttpSession session) {
-        emailService.sendAuthCodeEmailToSession(UuidRequestDto.from(uuidRequestVo), session);
+
+    @Operation(summary = "현재 비밀번호 확인", description = "비밀번호 재설정을 위해 현재 비밀번호를 확인합니다.")
+    @PostMapping("/verify-current-password")
+    public BaseResponse<Void> verifyCurrentPassword(@RequestBody CurrentPasswordRequestDto currentPasswordRequestDto, HttpSession session, @AuthenticationPrincipal AuthUserDetail authUserDetail) {
+        authService.verifyCurrentPassword(currentPasswordRequestDto);
         return new BaseResponse<>();
     }
 
-    @Operation(summary = "인증코드 확인", description = "인증코드를 확인합니다.")
-    @PostMapping("/verify-auth-code")
-    public BaseResponse<Void> verifyAuthCode(@RequestBody AuthCodeRequestVo authCodeRequestVo, HttpSession session) {
-        emailService.verifyAuthCode(AuthCodeRequestDto.from(authCodeRequestVo), session);
-        return new BaseResponse<>();
-    }
-
-    //todo: 기존 비밀번호도 requestbody로 받아야 하는지 front에서 처리 가능한지?
-    @Operation(summary = "비밀번호 변경", description = "인증코드로 인증 후 비밀번호를 변경합니다.")
+    @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
     @PostMapping("/change-password")
-    public BaseResponse<Void> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequestDto, HttpSession session, @AuthenticationPrincipal AuthUserDetail authUserDetail) {
-        session.removeAttribute("email");
-        session.removeAttribute("authCode"); // 인증 코드 제거
-        authService.changePassword(passwordChangeRequestDto);
+    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto) {
+        authService.changePassword(newPasswordRequestDto);
         return new BaseResponse<>();
     }
+
 }

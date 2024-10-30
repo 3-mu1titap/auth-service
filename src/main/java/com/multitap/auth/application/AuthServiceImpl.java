@@ -1,7 +1,6 @@
 package com.multitap.auth.application;
 
 import com.multitap.auth.dto.in.*;
-import com.multitap.auth.dto.out.FindIdResponseDto;
 import com.multitap.auth.dto.out.SignInResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.entity.Member;
@@ -74,21 +73,28 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    @Override
-    public FindIdResponseDto findId(FindIdRequestDto findIdRequestDto) {
-        Member member = memberRepository.findByEmail(findIdRequestDto.getEmail()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.INVALID_EMAIL_ADDRESS)
-        );
-        return FindIdResponseDto.from(member);
-    }
 
-
+    // 현재 비밀번호 검증
     @Override
-    public void changePassword(PasswordChangeRequestDto passwordChangeRequestDto) {
-        Member member = memberRepository.findByUuid(passwordChangeRequestDto.getUuid()).orElseThrow(
+    public void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto) {
+        Member member = memberRepository.findByUuid(currentPasswordRequestDto.getUuid()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
-        memberRepository.save(passwordChangeRequestDto.toEntity(passwordChangeRequestDto, member, passwordEncoder));
+
+        if (!new BCryptPasswordEncoder().matches(currentPasswordRequestDto.getPassword(), member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.PASSWORD_MATCH_FAILED);
+        }
+    }
+
+    // 비밀번호 변경
+    @Override
+    public void changePassword(NewPasswordRequestDto newPasswordRequestDto) {
+
+        Member member = memberRepository.findByUuid(newPasswordRequestDto.getUuid()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
+        );
+
+        memberRepository.save(newPasswordRequestDto.toEntity(newPasswordRequestDto, member, passwordEncoder));
     }
 
 

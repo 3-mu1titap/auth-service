@@ -6,20 +6,19 @@ import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class PasswordChangeRequestDto {
+public class NewPasswordRequestDto {
 
-    private String password;
     private String uuid;
+    private String newPassword;
 
     @Builder
-    public PasswordChangeRequestDto(String password, String uuid) {
-
-        this.password = password;
+    public NewPasswordRequestDto(String uuid, String newPassword) {
         this.uuid = uuid;
+        this.newPassword = newPassword;
     }
 
     // 비밀번호 변경
-    public Member toEntity(PasswordChangeRequestDto passwordChangeRequestDto, Member member, PasswordEncoder passwordEncoder) {
+    public Member toEntity(NewPasswordRequestDto newPasswordRequestDto, Member member, PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .id(member.getId())
                 .uuid(member.getUuid())
@@ -27,7 +26,7 @@ public class PasswordChangeRequestDto {
                 .nickName(member.getNickName())
                 .email(member.getEmail())
                 .accountId(member.getAccountId())
-                .password(passwordEncoder.encode(passwordChangeRequestDto.getPassword()))
+                .password(passwordEncoder.encode(newPasswordRequestDto.getNewPassword()))
                 .phoneNumber(member.getPhoneNumber())
                 .role(member.getRole())
                 .build();
