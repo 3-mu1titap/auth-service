@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Profile;
 
 @OpenAPIDefinition(
         info = @io.swagger.v3.oas.annotations.info.Info(
-                title = "STARBUCKS Service API",
+                title = "Auth Service API",
                 version = "v1",
-                description = "STARBUCKS API Docs"
+                description = "Auth API Docs"
         )
 )
 @SecurityScheme(

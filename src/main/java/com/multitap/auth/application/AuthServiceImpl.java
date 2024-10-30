@@ -97,6 +97,14 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.save(newPasswordRequestDto.toEntity(newPasswordRequestDto, member, passwordEncoder));
     }
 
+    @Override
+    public void changeMemberInfo(MemberInfoRequestDto memberInfoRequestDto) {
+        Member member = memberRepository.findByUuid(memberInfoRequestDto.getUuid()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
+        );
+        memberRepository.save(memberInfoRequestDto.toUpdateEntity((member)));
+    }
+
 
     private SignInResponseDto createToken(Authentication authentication) {
         AuthUserDetail authUserDetail = (AuthUserDetail) authentication.getPrincipal();

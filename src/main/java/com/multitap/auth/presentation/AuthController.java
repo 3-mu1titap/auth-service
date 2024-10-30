@@ -14,10 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "계정 관리 API", description = "계정 관련 API endpoints")
 @Slf4j
@@ -79,10 +76,18 @@ public class AuthController {
     }
 
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
-    @PostMapping("/change-password")
+    @PutMapping("/change-password")
     public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto) {
         authService.changePassword(newPasswordRequestDto);
         return new BaseResponse<>();
     }
+
+    @Operation(summary = "회원 정보 수정", description = "닉네임 또는 전화번호를 수정합니다.")
+    @PutMapping("/change-memberInfo")
+    public BaseResponse<Void> changeMemberInfo(@RequestBody MemberInfoRequestVo memberInfoRequestVo) {
+        authService.changeMemberInfo(MemberInfoRequestDto.from(memberInfoRequestVo));
+        return new BaseResponse<>();
+    }
+
 
 }
