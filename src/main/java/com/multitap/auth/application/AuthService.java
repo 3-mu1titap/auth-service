@@ -10,4 +10,5 @@ public interface AuthService {
     void signOut();
     void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto);
     void changePassword(NewPasswordRequestDto newPasswordRequestDto);
+    void changeMemberInfo(MemberInfoRequestDto memberInfoRequestDto);
 }
