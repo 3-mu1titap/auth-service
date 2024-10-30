@@ -1,17 +1,39 @@
-Server:
-  port: 0
-
 spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: auth-service
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+  jwt:
+    secret: jerry
+    access-token-validity: 3600000
+    refresh-token-validity: 604800000
+  security:
+    user:
+      name: admin
+      password: 1234
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tnbin98@gmail.com
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+server:
+  port: 8080
 
 eureka:
   instance:
@@ -22,3 +44,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+logging:
+  level:
+    com:
+      multitap:
+        auth: DEBUG
