@@ -16,7 +16,7 @@ spring:
       hibernate:
         format_sql: true
   jwt:
-    secret: jerry
+    secret: amVycnk=  # Base64 인코딩된 'jerry'
     access-token-validity: 3600000
     refresh-token-validity: 604800000
   security:
@@ -27,10 +27,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: tnbin98@gmail.com
-    password: ${SMTP_PASSWORD}
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
+    password: ${SMTP_PASSWORD}  # 민감한 정보는 외부에서 주입
 
 server:
   port: 8080
@@ -49,3 +46,9 @@ logging:
     com:
       multitap:
         auth: DEBUG
+
+# Redis 설정 추가
+data:
+  redis:
+    host: ${SPRING_REDIS_HOST}  # Redis 호스트
+    port: ${SPRING_REDIS_PORT}  # Redis 포트

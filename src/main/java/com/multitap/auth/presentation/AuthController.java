@@ -1,7 +1,9 @@
 package com.multitap.auth.presentation;
 
 import com.multitap.auth.application.AuthService;
+import com.multitap.auth.application.BlackListService;
 import com.multitap.auth.application.EmailService;
+import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
 import com.multitap.auth.entity.AuthUserDetail;
@@ -25,6 +27,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final EmailService emailService;
+    private final BlackListService blackListService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "회원가입", description = "회원가입 기능입니다.")
     @PostMapping("/sign-up")
@@ -45,13 +49,15 @@ public class AuthController {
         return new BaseResponse<>(authService.oAuthSignIn(OAuthSignInRequestDto.from(oAuthSignInRequestVo)).toVo());
     }
 
-    //todo: kafka를 통한 token 블랙 리스트 구현
-    // @Operation(summary = "로그아웃", description = "로그아웃 기능입니다.")
-    // @PostMapping("/sign-out")
-    // public BaseResponse<Void> signOut(@AuthenticationPrincipal AuthUserDetail authUserDetail) {
-    //     authService.signOut(authUserDetail.getMemberUuid());
-    //     return new BaseResponse<>();
-    // }
+    @Operation(summary = "로그아웃", description = "로그아웃 기능입니다.")
+    @PostMapping("/sign-out")
+    public BaseResponse<Void> signOut(@RequestHeader("Authorization") String token) {
+        log.info("token: {}", token);
+        String jwtToken = token.substring(7);
+        long expiration = jwtTokenProvider.getExpiration(jwtToken);
+        blackListService.addToBlacklist(jwtToken, expiration);
+        return new BaseResponse<>();
+    }
 
     @Operation(summary = "아이디 찾기", description = "이메일 인증을 통해 아이디를 찾습니다.")
     @PostMapping("/find-id")
@@ -77,8 +83,11 @@ public class AuthController {
 
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
     @PutMapping("/change-password")
-    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto) {
+    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto, @RequestHeader("Authorization") String token) {
         authService.changePassword(newPasswordRequestDto);
+        String jwtToken = token.substring(7);
+        long expiration = jwtTokenProvider.getExpiration(jwtToken);
+        blackListService.addToBlacklist(jwtToken, expiration);
         return new BaseResponse<>();
     }
 
@@ -88,6 +97,5 @@ public class AuthController {
         authService.changeMemberInfo(MemberInfoRequestDto.from(memberInfoRequestVo));
         return new BaseResponse<>();
     }
-
 
 }
