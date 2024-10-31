@@ -2,12 +2,13 @@ package com.multitap.auth.vo.in;
 
 import com.multitap.auth.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class SignUpRequestVo {
 
     @Schema(description = "이름", example = "강제리")
@@ -31,14 +32,4 @@ public class SignUpRequestVo {
     @Schema(description = "상태", example = "MENTEE")
     private Role role;
 
-    @Builder
-    public SignUpRequestVo(String name, String nickName, String email, String accountId, String password, String phoneNumber, Role role) {
-        this.name = name;
-        this.nickName = nickName;
-        this.email = email;
-        this.accountId = accountId;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
 }

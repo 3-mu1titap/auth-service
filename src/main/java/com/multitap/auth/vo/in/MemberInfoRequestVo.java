@@ -2,8 +2,10 @@ package com.multitap.auth.vo.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class MemberInfoRequestVo {
 
     @Schema(description = "닉네임", example = "제리누나", nullable = true)

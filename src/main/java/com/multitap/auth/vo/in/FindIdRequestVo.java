@@ -2,8 +2,10 @@ package com.multitap.auth.vo.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class FindIdRequestVo {
 
     @Schema(description = "이메일", example = "test1234@gmail.com", nullable = true)
