@@ -6,16 +6,12 @@ import com.multitap.auth.application.EmailService;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
-import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.vo.in.*;
-import com.multitap.auth.vo.out.FindIdResponseVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "계정 관리 API", description = "계정 관련 API endpoints")
@@ -76,15 +72,15 @@ public class AuthController {
 
     @Operation(summary = "현재 비밀번호 확인", description = "비밀번호 재설정을 위해 현재 비밀번호를 확인합니다.")
     @PostMapping("/verify-current-password")
-    public BaseResponse<Void> verifyCurrentPassword(@RequestBody CurrentPasswordRequestDto currentPasswordRequestDto, HttpSession session, @AuthenticationPrincipal AuthUserDetail authUserDetail) {
-        authService.verifyCurrentPassword(currentPasswordRequestDto);
+    public BaseResponse<Void> verifyCurrentPassword(@RequestBody CurrentPasswordRequestVo currentPasswordRequestVo, @RequestHeader("Authorization") String uuid) {
+        authService.verifyCurrentPassword(CurrentPasswordRequestDto.from(currentPasswordRequestVo, uuid));
         return new BaseResponse<>();
     }
 
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
     @PutMapping("/change-password")
-    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestDto newPasswordRequestDto, @RequestHeader("Authorization") String token) {
-        authService.changePassword(newPasswordRequestDto);
+    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestVo newPasswordRequestVo, @RequestHeader("Authorization") String token, @RequestHeader("Authorization") String uuid) {
+        authService.changePassword(NewPasswordRequestDto.from(newPasswordRequestVo, uuid));
         String jwtToken = token.substring(7);
         long expiration = jwtTokenProvider.getExpiration(jwtToken);
         blackListService.addToBlacklist(jwtToken, expiration);
@@ -93,8 +89,8 @@ public class AuthController {
 
     @Operation(summary = "회원 정보 수정", description = "닉네임 또는 전화번호를 수정합니다.")
     @PutMapping("/change-memberInfo")
-    public BaseResponse<Void> changeMemberInfo(@RequestBody MemberInfoRequestVo memberInfoRequestVo) {
-        authService.changeMemberInfo(MemberInfoRequestDto.from(memberInfoRequestVo));
+    public BaseResponse<Void> changeMemberInfo(@RequestBody MemberInfoRequestVo memberInfoRequestVo, @RequestHeader("Authorization") String uuid) {
+        authService.changeMemberInfo(MemberInfoRequestDto.from(memberInfoRequestVo, uuid));
         return new BaseResponse<>();
     }
 

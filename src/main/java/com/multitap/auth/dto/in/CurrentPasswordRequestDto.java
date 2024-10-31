@@ -1,5 +1,6 @@
 package com.multitap.auth.dto.in;
 
+import com.multitap.auth.vo.in.CurrentPasswordRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +15,14 @@ public class CurrentPasswordRequestDto {
 
         this.password = password;
         this.uuid = uuid;
+    }
+
+
+    public static CurrentPasswordRequestDto from(CurrentPasswordRequestVo currentPasswordRequestVo,String uuid) {
+        return CurrentPasswordRequestDto.builder()
+                .password(currentPasswordRequestVo.getPassword())
+                .uuid(uuid)
+                .build();
     }
 
 }

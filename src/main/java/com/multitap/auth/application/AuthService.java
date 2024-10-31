@@ -7,7 +7,6 @@ public interface AuthService {
     void signUp(SignUpRequestDto signUpRequestDto);
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
     SignInResponseDto oAuthSignIn(OAuthSignInRequestDto oAuthSignInRequestDto);
-    void signOut();
     void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto);
     void changePassword(NewPasswordRequestDto newPasswordRequestDto);
     void changeMemberInfo(MemberInfoRequestDto memberInfoRequestDto);

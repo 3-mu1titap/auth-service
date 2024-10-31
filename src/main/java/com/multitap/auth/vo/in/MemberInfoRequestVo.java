@@ -6,10 +6,6 @@ import lombok.Getter;
 @Getter
 public class MemberInfoRequestVo {
 
-
-    @Schema(description = "회원 UUID", example = "", nullable = true)
-    private String uuid;
-
     @Schema(description = "닉네임", example = "제리누나", nullable = true)
     private String nickName;
 

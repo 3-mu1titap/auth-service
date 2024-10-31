@@ -67,13 +67,6 @@ public class AuthServiceImpl implements AuthService {
         return createToken(oAuthAuthenticate(member));
     }
 
-    //todo: 로그아웃 시  토큰 블랙리스트 등록, 비밀번호 재설정 시 토큰 블랙리스트 등록, 아이디 찾기 구현 +) 회원 탈퇴 구현
-    @Override
-    public void signOut() {
-
-    }
-
-
     // 현재 비밀번호 검증
     @Override
     public void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto) {
@@ -102,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
         Member member = memberRepository.findByUuid(memberInfoRequestDto.getUuid()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
-        memberRepository.save(memberInfoRequestDto.toUpdateEntity((member)));
+        memberRepository.save(memberInfoRequestDto.toEntity(member));
     }
 
 

@@ -19,16 +19,16 @@ public class MemberInfoRequestDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public static MemberInfoRequestDto from(MemberInfoRequestVo memberInfoRequestVo) {
+    public static MemberInfoRequestDto from(MemberInfoRequestVo memberInfoRequestVo, String uuid) {
         return MemberInfoRequestDto.builder()
-                .uuid(memberInfoRequestVo.getUuid())
+                .uuid(uuid)
                 .nickname(memberInfoRequestVo.getNickName())
                 .phoneNumber(memberInfoRequestVo.getPhoneNumber())
                 .build();
 
     }
 
-    public Member toUpdateEntity(Member member) {
+    public Member toEntity(Member member) {
         return Member.builder()
                 .id(member.getId())
                 .uuid(uuid)

@@ -1,6 +1,7 @@
 package com.multitap.auth.dto.in;
 
 import com.multitap.auth.entity.Member;
+import com.multitap.auth.vo.in.NewPasswordRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,13 @@ public class NewPasswordRequestDto {
     public NewPasswordRequestDto(String uuid, String newPassword) {
         this.uuid = uuid;
         this.newPassword = newPassword;
+    }
+
+    public static NewPasswordRequestDto from(NewPasswordRequestVo newPasswordRequestVo, String uuid) {
+        return NewPasswordRequestDto.builder()
+                .uuid(uuid)
+                .newPassword(newPasswordRequestVo.getNewPassword())
+                .build();
     }
 
     // 비밀번호 변경
