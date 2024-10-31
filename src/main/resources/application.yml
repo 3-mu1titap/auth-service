@@ -28,6 +28,9 @@ spring:
     port: 587
     username: tnbin98@gmail.com
     password: ${SMTP_PASSWORD}  # 민감한 정보는 외부에서 주입
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true  # STARTTLS 활성화
 
 server:
   port: 8080
