@@ -63,6 +63,7 @@ public class JwtTokenProvider {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .uuid(authUserDetail.getUuid())
+                .role((authUserDetail.getRole()))
                 .build();
     }
 

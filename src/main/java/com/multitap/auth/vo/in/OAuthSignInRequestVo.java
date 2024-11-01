@@ -12,7 +12,7 @@ public class OAuthSignInRequestVo {
     private String provider;
 
     @Schema(description = "제공자id", example = "kakao", nullable = true)
-    private String providerId;
+    private Long providerId;
 
     @Schema(description = "소셜 이메일", example = "test1234@gamil.com", nullable = true)
     private String providerEmail;

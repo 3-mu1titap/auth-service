@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 public class OAuthSignInRequestDto {
 
     private String provider;
-    private String providerId;
+    private Long providerId;
     private String email;
 
     @Builder
     public OAuthSignInRequestDto(
             String provider,
-            String providerId,
+            Long providerId,
             String email
     ) {
         this.provider = provider;

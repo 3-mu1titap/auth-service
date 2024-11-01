@@ -10,17 +10,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class NewPasswordRequestDto {
 
     private String uuid;
+    private String password;
     private String newPassword;
 
     @Builder
-    public NewPasswordRequestDto(String uuid, String newPassword) {
+    public NewPasswordRequestDto(String uuid, String password, String newPassword) {
         this.uuid = uuid;
+        this.password = password;
         this.newPassword = newPassword;
     }
 
     public static NewPasswordRequestDto from(NewPasswordRequestVo newPasswordRequestVo, String uuid) {
         return NewPasswordRequestDto.builder()
                 .uuid(uuid)
+                .password(newPasswordRequestVo.getPassword())
                 .newPassword(newPasswordRequestVo.getNewPassword())
                 .build();
     }

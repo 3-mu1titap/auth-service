@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewPasswordRequestVo {
 
+    private String password;
     private String newPassword;
 
     @Builder
-    public NewPasswordRequestVo(String newPassword) {
+    public NewPasswordRequestVo(String password, String newPassword) {
+        this.password = password;
         this.newPassword = newPassword;
     }
 
