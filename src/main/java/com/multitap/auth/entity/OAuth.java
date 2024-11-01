@@ -13,19 +13,18 @@ public class OAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, length = 50)
     private String memberUuid;
     @Column(nullable = false, length = 50)
     private String provider;
     @Column(nullable = false, length = 50)
-    private String providerId;
+    private Long providerId;
 
     @Builder
     public OAuth(
             String memberUuid,
             String provider,
-            String providerId
+            Long providerId
     ) {
         this.memberUuid = memberUuid;
         this.provider = provider;

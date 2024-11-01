@@ -8,6 +8,7 @@ import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
 import com.multitap.auth.vo.in.*;
 import com.multitap.auth.vo.out.SignInResponseVo;
+import com.multitap.auth.vo.out.UuidResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,8 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 기능입니다.")
     @PostMapping("/sign-up")
-    public BaseResponse<Void> signUp(@RequestBody SignUpRequestVo signUpRequestVo) {
-        authService.signUp(SignUpRequestDto.from(signUpRequestVo));
-        return new BaseResponse<>();
+    public BaseResponse<UuidResponseVo> signUp(@RequestBody SignUpRequestVo signUpRequestVo) {
+        return new BaseResponse<>(authService.signUp(SignUpRequestDto.from(signUpRequestVo)).toVo());
     }
 
     @Operation(summary = "로그인", description = "로그인 기능입니다.")
@@ -69,13 +69,6 @@ public class AuthController {
         return new BaseResponse<>();
     }
 
-
-    @Operation(summary = "현재 비밀번호 확인", description = "비밀번호 재설정을 위해 현재 비밀번호를 확인합니다.")
-    @PostMapping("/verify-current-password")
-    public BaseResponse<Void> verifyCurrentPassword(@RequestBody CurrentPasswordRequestVo currentPasswordRequestVo, @RequestHeader("Uuid") String uuid) {
-        authService.verifyCurrentPassword(CurrentPasswordRequestDto.from(currentPasswordRequestVo, uuid));
-        return new BaseResponse<>();
-    }
 
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
     @PostMapping("/change-password")

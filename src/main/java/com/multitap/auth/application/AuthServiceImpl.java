@@ -2,8 +2,10 @@ package com.multitap.auth.application;
 
 import com.multitap.auth.dto.in.*;
 import com.multitap.auth.dto.out.SignInResponseDto;
+import com.multitap.auth.dto.out.UuidResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.entity.Member;
+import com.multitap.auth.entity.OAuth;
 import com.multitap.auth.infrastructure.MemberRepository;
 import com.multitap.auth.infrastructure.OAuthRepository;
 import com.multitap.auth.common.exception.BaseException;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -32,12 +36,14 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void signUp(SignUpRequestDto signUpRequestDto) {
+    public UuidResponseDto signUp(SignUpRequestDto signUpRequestDto) {
 
         if (memberRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_USER);
         }
-        memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
+        Member member = signUpRequestDto.toEntity(passwordEncoder);
+        memberRepository.save(member);
+        return UuidResponseDto.from(member);
     }
 
     @Override
@@ -60,24 +66,30 @@ public class AuthServiceImpl implements AuthService {
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER) // 회원가입 페이지로 이동
         );
 
-        oAuthRepository.findByMemberUuid(member.getUuid()).orElseGet(
-                () -> oAuthRepository.save(oAuthSignInRequestDto.toEntity(member.getUuid()))
-        );
+        // 소셜 DB에서 providerId를 사용하여 OAuth 정보 조회
+        Optional<OAuth> oAuth = oAuthRepository.findByMemberUuid(member.getUuid());
 
+        // providerId가 없는 경우, 새 OAuth 엔티티 생성 및 저장
+        if (oAuth.isEmpty()) {
+            oAuthRepository.save(oAuthSignInRequestDto.toEntity(member.getUuid()));
+        }
+
+        // 회원이 존재하므로 로그인 처리를 진행
         return createToken(oAuthAuthenticate(member));
     }
 
-    // 현재 비밀번호 검증
-    @Override
-    public void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto) {
-        Member member = memberRepository.findByUuid(currentPasswordRequestDto.getUuid()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
-        );
-
-        if (!new BCryptPasswordEncoder().matches(currentPasswordRequestDto.getPassword(), member.getPassword())) {
-            throw new BaseException(BaseResponseStatus.PASSWORD_MATCH_FAILED);
-        }
-    }
+//
+//    // 현재 비밀번호 검증
+//    @Override
+//    public void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto) {
+//        Member member = memberRepository.findByUuid(currentPasswordRequestDto.getUuid()).orElseThrow(
+//                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
+//        );
+//
+//        if (!new BCryptPasswordEncoder().matches(currentPasswordRequestDto.getPassword(), member.getPassword())) {
+//            throw new BaseException(BaseResponseStatus.PASSWORD_MATCH_FAILED);
+//        }
+//    }
 
     // 비밀번호 변경
     @Override
@@ -86,6 +98,10 @@ public class AuthServiceImpl implements AuthService {
         Member member = memberRepository.findByUuid(newPasswordRequestDto.getUuid()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
+
+        if (!new BCryptPasswordEncoder().matches(newPasswordRequestDto.getPassword(), member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.PASSWORD_MATCH_FAILED);
+        }
 
         memberRepository.save(newPasswordRequestDto.toEntity(newPasswordRequestDto, member, passwordEncoder));
     }
