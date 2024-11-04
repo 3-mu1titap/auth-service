@@ -16,7 +16,7 @@ spring:
       hibernate:
         format_sql: true
   jwt:
-    secret: amVycnk=  # Base64 인코딩된 'jerry'
+    secret: ${JWT_SECRET}
     access-token-validity: 3600000
     refresh-token-validity: 604800000
   security:

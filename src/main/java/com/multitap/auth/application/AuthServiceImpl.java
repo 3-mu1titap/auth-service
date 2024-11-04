@@ -1,6 +1,7 @@
 package com.multitap.auth.application;
 
 import com.multitap.auth.dto.in.*;
+import com.multitap.auth.dto.out.RefreshTokenResponseDto;
 import com.multitap.auth.dto.out.SignInResponseDto;
 import com.multitap.auth.dto.out.UuidResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
@@ -78,19 +79,6 @@ public class AuthServiceImpl implements AuthService {
         return createToken(oAuthAuthenticate(member));
     }
 
-//
-//    // 현재 비밀번호 검증
-//    @Override
-//    public void verifyCurrentPassword(CurrentPasswordRequestDto currentPasswordRequestDto) {
-//        Member member = memberRepository.findByUuid(currentPasswordRequestDto.getUuid()).orElseThrow(
-//                () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
-//        );
-//
-//        if (!new BCryptPasswordEncoder().matches(currentPasswordRequestDto.getPassword(), member.getPassword())) {
-//            throw new BaseException(BaseResponseStatus.PASSWORD_MATCH_FAILED);
-//        }
-//    }
-
     // 비밀번호 변경
     @Override
     public void changePassword(NewPasswordRequestDto newPasswordRequestDto) {
@@ -112,6 +100,11 @@ public class AuthServiceImpl implements AuthService {
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
         memberRepository.save(memberInfoRequestDto.toEntity(member));
+    }
+
+    @Override
+    public RefreshTokenResponseDto refreshAccess(RefreshTokenRequestDto refreshTokenRequestDto) {
+        return jwtTokenProvider.generateAccessTokenFromRefreshToken(refreshTokenRequestDto);
     }
 
 
