@@ -1,5 +1,7 @@
 package com.multitap.auth.common.jwt;
 
+import com.multitap.auth.dto.in.RefreshTokenRequestDto;
+import com.multitap.auth.dto.out.RefreshTokenResponseDto;
 import com.multitap.auth.dto.out.SignInResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
 import io.jsonwebtoken.Claims;
@@ -38,6 +40,7 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(paddedKeyBytes);
     }
 
+    // token 생성
     public SignInResponseDto generateToken(AuthUserDetail authUserDetail) {
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenValidityInMilliseconds);
@@ -67,6 +70,25 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    public RefreshTokenResponseDto generateAccessTokenFromRefreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
+        Claims claims = parseClaims(refreshTokenRequestDto.getRefreshToken());
+        Date now = new Date();
+        Date accessTokenExpiration = new Date(now.getTime() + accessTokenValidityInMilliseconds);
+
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(accessTokenExpiration)
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return RefreshTokenResponseDto.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
+
+    // redis 등록을 위한 유효기간 추출
     public long getExpiration(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
@@ -74,5 +96,13 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getExpiration().getTime();
+    }
+
+    public Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

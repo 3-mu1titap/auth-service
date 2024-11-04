@@ -7,6 +7,7 @@ import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
 import com.multitap.auth.vo.in.*;
+import com.multitap.auth.vo.out.RefreshTokenResponseVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import com.multitap.auth.vo.out.UuidResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +46,7 @@ public class AuthController {
         return new BaseResponse<>(authService.oAuthSignIn(OAuthSignInRequestDto.from(oAuthSignInRequestVo)).toVo());
     }
 
-    @Operation(summary = "로그아웃", description = "로그아웃 기능입니다.")
+    @Operation(summary = "로그아웃", description = "로그아웃 기능입니다. refresh token 을 넘겨주세요")
     @PostMapping("/sign-out")
     public BaseResponse<Void> signOut(@RequestHeader("Authorization") String token) {
         log.info("token: {}", token);
@@ -70,7 +71,7 @@ public class AuthController {
     }
 
 
-    @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다.")
+    @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다. refresh token을 넘겨주세요")
     @PostMapping("/change-password")
     public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestVo newPasswordRequestVo, @RequestHeader("Authorization") String token, @RequestHeader("Uuid") String uuid) {
         authService.changePassword(NewPasswordRequestDto.from(newPasswordRequestVo, uuid));
@@ -87,4 +88,10 @@ public class AuthController {
         return new BaseResponse<>();
     }
 
+    @Operation(summary = "access token 재발급", description = "만료된 access token을 재발급 합니다.")
+    @PostMapping("/refresh-access")
+    public BaseResponse<RefreshTokenResponseVo> refreshAccess(@RequestHeader("Authorization") String token) {
+        String jwtToken = token.substring(7);
+        return new BaseResponse<>(authService.refreshAccess(RefreshTokenRequestDto.from(jwtToken)).toVo());
+    }
 }
