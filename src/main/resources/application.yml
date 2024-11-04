@@ -1,39 +1,48 @@
+server:
+  port: 9100
+
 spring:
-  profiles:
-    active: local
+  application:
+    name: auth-service
+
   datasource:
-    url: jdbc:mysql://localhost:3306/auth
+    url: jdbc:mysql://localhost:3308/auth-service
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-  application:
-    name: auth-service
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ThisIsAVeryLongSecretKeyThatIsAtLeast32Characters!
     access-token-validity: 3600000
     refresh-token-validity: 604800000
+
   security:
     user:
       name: admin
       password: 1234
+
   mail:
     host: smtp.gmail.com
     port: 587
     username: tnbin98@gmail.com
-    password: ${SMTP_PASSWORD}  # 민감한 정보는 외부에서 주입
+    password: klus fbql zpuj xoes
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true  # STARTTLS 활성화
 
-server:
-  port: 8080
+  # Redis 설정
+  data:
+    redis:
+      host: localhost  # Redis 호스트
+      port: 6379  # Redis 포트
 
 eureka:
   instance:
@@ -44,14 +53,15 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
 logging:
   level:
     com:
       multitap:
         auth: DEBUG
-
-# Redis 설정 추가
-data:
-  redis:
-    host: ${SPRING_REDIS_HOST}  # Redis 호스트
-    port: ${SPRING_REDIS_PORT}  # Redis 포트
