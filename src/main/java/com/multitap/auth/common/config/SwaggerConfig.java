@@ -19,9 +19,9 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 
         String securityJwtName = "JWT";
-        io.swagger.v3.oas.models.security.SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
         Components components = new Components()
-                .addSecuritySchemes(securityJwtName, new io.swagger.v3.oas.models.security.SecurityScheme()
+                .addSecuritySchemes(securityJwtName, new SecurityScheme()
                         .name(securityJwtName)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme(BEARER_TOKEN_PREFIX)
@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .info(apiInfo());
     }
 
-    private io.swagger.v3.oas.models.info.Info apiInfo() {
+    private Info apiInfo() {
         return new Info()
                 .title("AUTH SERVICE")
                 .description("AUTH SERVICE Swagger UI")
