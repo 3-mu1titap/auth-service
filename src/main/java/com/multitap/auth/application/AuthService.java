@@ -8,6 +8,7 @@ import com.multitap.auth.dto.out.UuidResponseDto;
 public interface AuthService {
     UuidResponseDto signUp(SignUpRequestDto signUpRequestDto);
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
+    void checkAccountId(AccountIdRequestDto accountIdRequestDto);
     SignInResponseDto oAuthSignIn(OAuthSignInRequestDto oAuthSignInRequestDto);
     void changePassword(NewPasswordRequestDto newPasswordRequestDto);
     void changeMemberInfo(MemberInfoRequestDto memberInfoRequestDto);
