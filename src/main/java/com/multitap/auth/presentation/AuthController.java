@@ -34,6 +34,13 @@ public class AuthController {
         return new BaseResponse<>(authService.signUp(SignUpRequestDto.from(signUpRequestVo)).toVo());
     }
 
+    @Operation(summary = "아이디 확인", description = "아이디 중복을 확인합니다.")
+    @PostMapping("/cheak-accountId")
+    public BaseResponse<Void> checkAccountId(@RequestBody AccountIdRequestVo accountIdRequestVo) {
+        authService.checkAccountId(AccountIdRequestDto.from(accountIdRequestVo));
+        return new BaseResponse<>();
+    }
+
     @Operation(summary = "로그인", description = "로그인 기능입니다.")
     @PostMapping("/sign-in")
     public BaseResponse<SignInResponseVo> signIn(@RequestBody SignInRequestVo signInRequestVo) {
