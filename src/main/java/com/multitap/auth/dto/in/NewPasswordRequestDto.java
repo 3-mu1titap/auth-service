@@ -4,9 +4,11 @@ import com.multitap.auth.entity.Member;
 import com.multitap.auth.vo.in.NewPasswordRequestVo;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
+@NoArgsConstructor
 public class NewPasswordRequestDto {
 
     private String uuid;

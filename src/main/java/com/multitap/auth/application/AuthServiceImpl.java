@@ -48,6 +48,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public void checkAccountId(AccountIdRequestDto accountIdRequestDto) {
+        if (memberRepository.findByAccountId(accountIdRequestDto.getAccountId()).isPresent()) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_ACCOUNT_ID);
+        }
+    }
+
+
+    @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
 
         Member member = memberRepository.findByAccountId(signInRequestDto.getAccountId()).orElseThrow(

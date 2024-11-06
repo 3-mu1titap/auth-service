@@ -4,8 +4,10 @@ import com.multitap.auth.entity.Member;
 import com.multitap.auth.vo.in.MemberInfoRequestVo;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class MemberInfoRequestDto {
 
     private String uuid;
