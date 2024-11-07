@@ -40,5 +40,5 @@ out/
 ### VS Code ###
 .vscode/
 
-#**/SwaggerConfig.class
-#**/SwaggerConfig.java
+**/SwaggerConfig.class
+**/SwaggerConfig.java
