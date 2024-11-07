@@ -12,6 +12,8 @@ import com.multitap.auth.infrastructure.OAuthRepository;
 import com.multitap.auth.common.exception.BaseException;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponseStatus;
+import com.multitap.auth.infrastructure.kafka.producer.KafkaProducerService;
+import com.multitap.auth.infrastructure.kafka.producer.MemberDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public UuidResponseDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -42,8 +45,8 @@ public class AuthServiceImpl implements AuthService {
         if (memberRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_USER);
         }
-        Member member = signUpRequestDto.toEntity(passwordEncoder);
-        memberRepository.save(member);
+        Member member = memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
+        kafkaProducerService.sendCreateMember(MemberDto.from(member));
         return UuidResponseDto.from(member);
     }
 
