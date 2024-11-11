@@ -1,4 +1,4 @@
-package com.multitap.auth.infrastructure.kafka.producer;
+package com.multitap.kafka.producer;
 
 import com.multitap.auth.entity.Member;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberDto {
 
+    private String uuid;
     private String name;
     private String nickName;
     private String email;
@@ -16,7 +17,8 @@ public class MemberDto {
     private String phoneNumber;
 
     @Builder
-    public MemberDto(String name, String nickName, String email, String accountId, String phoneNumber) {
+    public MemberDto(String uuid, String name, String nickName, String email, String accountId, String phoneNumber) {
+        this.uuid = uuid;
         this.name = name;
         this.nickName = nickName;
         this.email = email;
@@ -26,6 +28,7 @@ public class MemberDto {
 
     public static MemberDto from(Member member) {
         return MemberDto.builder()
+                .uuid(member.getUuid())
                 .name(member.getName())
                 .nickName(member.getNickName())
                 .email(member.getEmail())

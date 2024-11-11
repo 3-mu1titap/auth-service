@@ -12,8 +12,9 @@ import com.multitap.auth.infrastructure.OAuthRepository;
 import com.multitap.auth.common.exception.BaseException;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponseStatus;
-import com.multitap.auth.infrastructure.kafka.producer.KafkaProducerService;
-import com.multitap.auth.infrastructure.kafka.producer.MemberDto;
+import com.multitap.kafka.producer.KafkaProducerService;
+import com.multitap.kafka.producer.MemberDto;
+import com.multitap.kafka.producer.NicknamePhoneDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-//    private final KafkaProducerService kafkaProducerService;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public UuidResponseDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BaseException(BaseResponseStatus.DUPLICATED_USER);
         }
         Member member = memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
-//        kafkaProducerService.sendCreateMember(MemberDto.from(member));
+        kafkaProducerService.sendCreateMember(MemberDto.from(member));
         return UuidResponseDto.from(member);
     }
 
@@ -110,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_USER)
         );
         memberRepository.save(memberInfoRequestDto.toEntity(member));
+        kafkaProducerService.sendCreateMemberInfo(NicknamePhoneDto.from(member));
     }
 
     @Override
@@ -142,5 +144,4 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
     }
-
 }
