@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components)
                 .addServersItem(new Server().url("/auth-service")) // 배포 버전
-                .addServersItem(new Server().url("/")) // 로컬 버전
+//                .addServersItem(new Server().url("/")) // 로컬 버전
                 .info(apiInfo());
     }
 
