@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -33,6 +32,7 @@ public class JwtTokenProvider {
 
     // 비밀 키를 생성하는 메서드
     private Key getSignKey() {
+        log.info("secretKey : {}", secret);
         byte[] keyBytes = secret.getBytes();
         // 키 길이를 256비트로 조정
         byte[] paddedKeyBytes = new byte[32];
@@ -44,7 +44,10 @@ public class JwtTokenProvider {
     public SignInResponseDto generateToken(AuthUserDetail authUserDetail) {
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenValidityInMilliseconds);
+        log.info("accessToken: {}", accessTokenValidityInMilliseconds);
+
         Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+        log.info("refreshToken: {}", refreshTokenValidityInMilliseconds);
 
         Claims claims = Jwts.claims().setSubject(authUserDetail.getUsername());
         claims.put("role", authUserDetail.getRole());
@@ -86,7 +89,6 @@ public class JwtTokenProvider {
                 .accessToken(accessToken)
                 .build();
     }
-
 
     // redis 등록을 위한 유효기간 추출
     public long getExpiration(String token) {
