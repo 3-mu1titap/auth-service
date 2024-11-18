@@ -34,7 +34,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .addSecurityItem(securityRequirement)
                 .components(components)
-                .addServersItem(new Server().url(swaggerUri))
+//                .addServersItem(new Server().url(swaggerUri))
+                .addServersItem(new Server().url("/auth-service"))
                 .info(apiInfo());
     }
 
