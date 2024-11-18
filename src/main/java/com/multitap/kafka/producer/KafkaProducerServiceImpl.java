@@ -1,4 +1,4 @@
-package com.multitap.auth.infrastructure.kafka.producer;
+package com.multitap.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,4 +21,15 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void sendCreateMemberInfo(NicknamePhoneDto nicknamePhoneDto) {
+        try {
+            kafkaTemplate.send("create-member-info-topic", nicknamePhoneDto);
+        } catch (Exception e) {
+            log.info("create MemberInfo event send 실패 : " + e);
+            throw new RuntimeException(e);
+        }
+    }
+
 }
