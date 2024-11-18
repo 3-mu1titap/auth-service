@@ -76,8 +76,7 @@ public class AuthController {
         emailService.sendTemporaryPasswordEmail(FindPasswordRequestDto.from(findPasswordRequestVo));
         return new BaseResponse<>();
     }
-
-
+    
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다. refresh token을 넘겨주세요")
     @PostMapping("/change-password")
     public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestVo newPasswordRequestVo, @RequestHeader("Authorization") String token, @RequestHeader("Uuid") String uuid) {
