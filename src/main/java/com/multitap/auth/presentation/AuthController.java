@@ -79,7 +79,7 @@ public class AuthController {
     
     @Operation(summary = "비밀번호 재설정", description = "비밀번호를 재설정합니다. refresh token을 넘겨주세요")
     @PostMapping("/change-password")
-    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestVo newPasswordRequestVo, @RequestHeader("Authorization") String token, @RequestHeader("Uuid") String uuid) {
+    public BaseResponse<Void> changePassword(@RequestBody NewPasswordRequestVo newPasswordRequestVo, @RequestHeader("Authorization") String token, @RequestHeader("userUuid") String uuid) {
         authService.changePassword(NewPasswordRequestDto.from(newPasswordRequestVo, uuid));
         String jwtToken = token.substring(7);
         long expiration = jwtTokenProvider.getExpiration(jwtToken);
@@ -89,7 +89,7 @@ public class AuthController {
 
     @Operation(summary = "회원 정보 수정", description = "닉네임 또는 전화번호를 수정합니다.")
     @PutMapping("/change-memberInfo")
-    public BaseResponse<Void> changeMemberInfo(@RequestBody MemberInfoRequestVo memberInfoRequestVo, @RequestHeader("Uuid") String uuid) {
+    public BaseResponse<Void> changeMemberInfo(@RequestBody MemberInfoRequestVo memberInfoRequestVo, @RequestHeader("userUuid") String uuid) {
         authService.changeMemberInfo(MemberInfoRequestDto.from(memberInfoRequestVo, uuid));
         return new BaseResponse<>();
     }
