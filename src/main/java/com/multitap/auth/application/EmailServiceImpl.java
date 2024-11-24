@@ -45,7 +45,78 @@ public class EmailServiceImpl implements EmailService {
     // 임시 비밀번호 이메일 전송
     public void sendTemporaryPasswordToEmail(String email, String temporaryPassword) {
         String subject = "임시 비밀번호 발급";
-        String body = "귀하의 임시 비밀번호는 다음과 같습니다: " + temporaryPassword + "\n로그인 후 비밀번호를 변경해주세요.";
+        String body = String.format("""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body { 
+                        font-family: 'Arial', sans-serif;
+                        line-height: 1.6;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #ffffff;
+                    }
+                    .header {
+                        text-align: center;
+                        padding: 20px 0;
+                    }
+                    .header img {
+                        max-width: 200px;
+                    }
+                    .content {
+                        background-color: #f8f9fa;
+                        padding: 30px;
+                        border-radius: 8px;
+                        margin: 20px 0;
+                    }
+                    .password-box {
+                        background-color: #ffffff;
+                        padding: 15px;
+                        border-radius: 5px;
+                        border: 1px solid #dee2e6;
+                        margin: 15px 0;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #495057;
+                    }
+                    .footer {
+                        text-align: center;
+                        color: #6c757d;
+                        font-size: 12px;
+                        margin-top: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <img src="cid:logo" alt="Adaptors Logo">
+                    </div>
+                    <div class="content">
+                        <h2>임시 비밀번호가 발급되었습니다</h2>
+                        <p>안녕하세요,</p>
+                        <p>요청하신 임시 비밀번호가 생성되었습니다. 보안을 위해 로그인 후 즉시 비밀번호를 변경해주세요.</p>
+                        <div class="password-box">
+                            %s
+                        </div>
+                        <p>보안을 위해 이 이메일은 곧바로 삭제해주시기 바랍니다.</p>
+                    </div>
+                    <div class="footer">
+                        <p>© 2024 ADAPTORS. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        """, temporaryPassword);
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject(subject);
