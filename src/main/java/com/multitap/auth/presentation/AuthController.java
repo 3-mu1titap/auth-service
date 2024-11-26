@@ -27,6 +27,8 @@ public class AuthController {
     private final EmailService emailService;
     private final BlackListService blackListService;
     private final JwtTokenProvider jwtTokenProvider;
+    
+    //todo: ec2 데이터 값 넣기
 
     @Operation(summary = "회원가입", description = "회원가입 기능입니다.")
     @PostMapping("/sign-up")
