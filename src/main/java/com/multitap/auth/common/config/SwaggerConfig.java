@@ -35,7 +35,7 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components)
 //                .addServersItem(new Server().url(swaggerUri))
-                .addServersItem(new Server().url("/auth-service"))
+//                 .addServersItem(new Server().url("/auth-service"))
                 .info(apiInfo());
     }
 
