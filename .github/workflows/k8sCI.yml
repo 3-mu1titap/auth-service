@@ -29,6 +29,7 @@ jobs:
         run: |
           mkdir -p ./src/main/resources
           touch ./src/main/resources/application.yml
+      
       - name: Set up application.yml
         run: echo "${{ secrets.AUTH_SERVICE_APPLICATION_YML }}" > ./src/main/resources/application.yml
 	      
