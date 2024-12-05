@@ -15,15 +15,17 @@ public class MemberDto {
     private String email;
     private String accountId;
     private String phoneNumber;
+    private String profileImage;
 
     @Builder
-    public MemberDto(String uuid, String name, String nickName, String email, String accountId, String phoneNumber) {
+    public MemberDto(String uuid, String name, String nickName, String email, String accountId, String phoneNumber, String profileImage) {
         this.uuid = uuid;
         this.name = name;
         this.nickName = nickName;
         this.email = email;
         this.accountId = accountId;
         this.phoneNumber = phoneNumber;
+        this.profileImage = profileImage;
     }
 
     public static MemberDto from(Member member) {
@@ -34,6 +36,7 @@ public class MemberDto {
                 .email(member.getEmail())
                 .accountId(member.getAccountId())
                 .phoneNumber(member.getPhoneNumber())
+                .profileImage("https://adaptors-bucket.s3.ap-northeast-2.amazonaws.com/mentoring/1732686722991-userDefaultImage.png") // 기본 프로필 이미지
                 .build();
     }
 }

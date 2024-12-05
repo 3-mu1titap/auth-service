@@ -36,6 +36,7 @@ public class SwaggerConfig {
                 .components(components)
 //                .addServersItem(new Server().url(swaggerUri))
                 .addServersItem(new Server().url("/auth-service"))
+                .addServersItem(new Server().url("/"))
                 .info(apiInfo());
     }
 
