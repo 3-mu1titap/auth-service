@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     // eureka client
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // JJWT 라이브러리
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // JJWT API
@@ -62,13 +62,16 @@ dependencies {
     // 카프카 의존성 추가
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.apache.kafka:kafka-clients:3.5.0'
+
+    //csv
+    implementation 'org.apache.commons:commons-csv:1.11.0'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" // Spring Cloud 의존성 관리
-    }
-}
+//dependencyManagement {
+//    imports {
+//        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" // Spring Cloud 의존성 관리
+//    }
+
 
 tasks.named('test') {
     useJUnitPlatform() // JUnit 플랫폼 사용
