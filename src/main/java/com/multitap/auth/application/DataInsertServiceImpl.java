@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,6 @@ public class DataInsertServiceImpl implements DataInsertService {
             List<CSVRecord> records = csvParser.getRecords();
 
             for (CSVRecord record : records) {
-                String uuid = record.get("uuid");
                 String name = record.get("name");
                 String nickName = record.get("nickName");
                 String email = record.get("email");
@@ -46,9 +46,8 @@ public class DataInsertServiceImpl implements DataInsertService {
                 String phoneNumber = record.get("phoneNumber");
                 Role role = Role.valueOf(record.get("role"));
 
-
                 Member member = Member.builder()
-                        .uuid(uuid)
+                        .uuid(UUID.randomUUID().toString())
                         .name(name)
                         .nickName(nickName)
                         .email(email)
