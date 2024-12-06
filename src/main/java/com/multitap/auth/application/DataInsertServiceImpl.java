@@ -6,6 +6,8 @@ import com.multitap.auth.dto.in.SignUpRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
+import com.multitap.kafka.producer.KafkaProducerService;
+import com.multitap.kafka.producer.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -25,6 +27,7 @@ public class DataInsertServiceImpl implements DataInsertService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public void addMemberFromCsv(MultipartFile file) {
@@ -56,6 +59,7 @@ public class DataInsertServiceImpl implements DataInsertService {
                         .build();
 
                 memberRepository.save(member);
+                kafkaProducerService.sendCreateMember(MemberDto.from(member));
             }
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.INTERNAL_SERVER_ERROR);
