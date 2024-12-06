@@ -2,6 +2,7 @@ package com.multitap.auth.application;
 
 import com.multitap.auth.common.exception.BaseException;
 import com.multitap.auth.common.response.BaseResponseStatus;
+import com.multitap.auth.dto.in.SignUpRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,7 @@ import java.util.List;
 public class DataInsertServiceImpl implements DataInsertService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void addMemberFromCsv(MultipartFile file) {
@@ -40,13 +43,14 @@ public class DataInsertServiceImpl implements DataInsertService {
                 String phoneNumber = record.get("phoneNumber");
                 Role role = Role.valueOf(record.get("role"));
 
+
                 Member member = Member.builder()
                         .uuid(uuid)
                         .name(name)
                         .nickName(nickName)
                         .email(email)
                         .accountId(accountId)
-                        .password(password)
+                        .password(passwordEncoder.encode(password))
                         .phoneNumber(phoneNumber)
                         .role(role)
                         .build();
