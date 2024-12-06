@@ -107,7 +107,7 @@ public class AuthController {
     }
 
     @Tag(name = "회원 더미 데이터 저장 API", description = "csv 파일로 데이터 저장")
-    @PostMapping(value = "/data/{count}", consumes = "multipart/form-data")
+    @PostMapping(value = "/data", consumes = "multipart/form-data")
     public BaseResponse<Void> addData(@RequestParam("file") MultipartFile file) {
         dataInsertService.addMemberFromCsv(file);
         return new BaseResponse<>();
