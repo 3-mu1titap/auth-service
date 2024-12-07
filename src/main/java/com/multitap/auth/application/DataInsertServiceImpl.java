@@ -2,7 +2,6 @@ package com.multitap.auth.application;
 
 import com.multitap.auth.common.exception.BaseException;
 import com.multitap.auth.common.response.BaseResponseStatus;
-import com.multitap.auth.dto.in.SignUpRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;

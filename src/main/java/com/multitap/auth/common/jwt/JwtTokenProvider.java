@@ -49,8 +49,11 @@ public class JwtTokenProvider {
         Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
         log.info("refreshToken: {}", refreshTokenValidityInMilliseconds);
 
-        Claims claims = Jwts.claims().setSubject(authUserDetail.getUsername());
+        Claims claims = Jwts.claims();
+        claims.setSubject("auth-service");
+        claims.put("username", authUserDetail.getUsername());
         claims.put("role", authUserDetail.getRole());
+
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)
