@@ -7,13 +7,13 @@ import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
 import com.multitap.kafka.producer.KafkaProducerService;
 import com.multitap.kafka.producer.MemberDto;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;

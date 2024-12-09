@@ -15,7 +15,6 @@ import com.multitap.auth.common.response.BaseResponseStatus;
 import com.multitap.kafka.producer.KafkaProducerService;
 import com.multitap.kafka.producer.MemberDto;
 import com.multitap.kafka.producer.NicknamePhoneDto;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

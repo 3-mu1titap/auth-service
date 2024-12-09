@@ -6,12 +6,12 @@ import com.multitap.auth.dto.in.FindIdRequestDto;
 import com.multitap.auth.dto.in.FindPasswordRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.infrastructure.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
