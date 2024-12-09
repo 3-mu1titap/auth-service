@@ -6,6 +6,7 @@ import com.multitap.auth.dto.in.FindIdRequestDto;
 import com.multitap.auth.dto.in.FindPasswordRequestDto;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.infrastructure.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EmailServiceImpl implements EmailService {
 
     private final MemberRepository memberRepository;

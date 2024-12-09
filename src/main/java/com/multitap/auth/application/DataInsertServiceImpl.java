@@ -7,6 +7,7 @@ import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
 import com.multitap.kafka.producer.KafkaProducerService;
 import com.multitap.kafka.producer.MemberDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DataInsertServiceImpl implements DataInsertService {
 
     private final MemberRepository memberRepository;

@@ -1,5 +1,6 @@
 package com.multitap.auth.application;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BlackListServiceImpl implements BlackListService {
 
     private final RedisTemplate<String, String> redisTemplate;
