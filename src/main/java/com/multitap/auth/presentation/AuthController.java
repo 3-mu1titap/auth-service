@@ -7,7 +7,9 @@ import com.multitap.auth.application.EmailService;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
+import com.multitap.auth.dto.out.MentorUuidResponseDto;
 import com.multitap.auth.vo.in.*;
+import com.multitap.auth.vo.out.MentorUuidResponseVo;
 import com.multitap.auth.vo.out.RefreshTokenResponseVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import com.multitap.auth.vo.out.UuidResponseVo;
@@ -104,6 +106,13 @@ public class AuthController {
     public BaseResponse<RefreshTokenResponseVo> refreshAccess(@RequestHeader("Authorization") String token) {
         String jwtToken = token.substring(7);
         return new BaseResponse<>(authService.refreshAccess(RefreshTokenRequestDto.from(jwtToken)).toVo());
+    }
+
+    @Operation(summary = "전체 멘토 uuid 조회", description = "회원가입 된 모든 멘토 uuid를 조회합니다")
+    @GetMapping("/mentor")
+    public BaseResponse<MentorUuidResponseVo> refreshAccess() {
+        MentorUuidResponseDto mentorUuidResponseDto = authService.getMentorUuid();
+        return new BaseResponse<>(mentorUuidResponseDto.toVo(mentorUuidResponseDto));
     }
 
     @Tag(name = "회원 더미 데이터 저장 API", description = "csv 파일로 데이터 저장")
