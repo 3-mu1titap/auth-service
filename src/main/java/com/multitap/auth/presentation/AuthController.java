@@ -105,7 +105,7 @@ public class AuthController {
         return new BaseResponse<>(authService.refreshAccess(RefreshTokenRequestDto.from(jwtToken)).toVo());
     }
 
-    @Operation(summary = "Member Email 받기", description = "Payment-service 에서 사용되는 API")
+    @Operation(summary = "Member Email 받기(FeignClient)", description = "Payment-service 에서 사용되는 API")
     @GetMapping("/member-email")
     public String getMemberEmail(@RequestParam("userUuid") String userUuid) {
         log.info("check UserUuid in getMemberEmail: {}", userUuid);
