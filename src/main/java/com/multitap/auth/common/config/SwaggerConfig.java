@@ -37,7 +37,7 @@ public class SwaggerConfig {
 //                 .addServersItem(new Server().url("/auth-service"))
                 .info(apiInfo());
     }
-
+//
     private Info apiInfo() {
         return new Info()
                 .title("AUTH SERVICE")
