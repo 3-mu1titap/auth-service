@@ -1,12 +1,14 @@
 package com.multitap.auth.application;
 
 import com.multitap.auth.dto.in.*;
+import com.multitap.auth.dto.out.MentorUuidResponseDto;
 import com.multitap.auth.dto.out.RefreshTokenResponseDto;
 import com.multitap.auth.dto.out.SignInResponseDto;
 import com.multitap.auth.dto.out.UuidResponseDto;
 import com.multitap.auth.entity.AuthUserDetail;
 import com.multitap.auth.entity.Member;
 import com.multitap.auth.entity.OAuth;
+import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
 import com.multitap.auth.infrastructure.OAuthRepository;
 import com.multitap.auth.common.exception.BaseException;
@@ -117,6 +119,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RefreshTokenResponseDto refreshAccess(RefreshTokenRequestDto refreshTokenRequestDto) {
         return jwtTokenProvider.generateAccessTokenFromRefreshToken(refreshTokenRequestDto);
+    }
+
+    @Override
+    public MentorUuidResponseDto getMentorUuid() {
+        return MentorUuidResponseDto.from(memberRepository.findUuidsByRole(Role.MENTOR));
     }
 
 
