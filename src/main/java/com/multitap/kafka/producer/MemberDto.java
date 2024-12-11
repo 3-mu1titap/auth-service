@@ -36,7 +36,7 @@ public class MemberDto {
                 .email(member.getEmail())
                 .accountId(member.getAccountId())
                 .phoneNumber(member.getPhoneNumber())
-                .profileImage("https://adaptors-bucket.s3.ap-northeast-2.amazonaws.com/mentoring/1732686722991-userDefaultImage.png") // 기본 프로필 이미지
+                .profileImage("https://adaptors-bucket.s3.ap-northeast-2.amazonaws.com/mentoring/1733832486599-thunderProfile.png")
                 .build();
     }
 }
