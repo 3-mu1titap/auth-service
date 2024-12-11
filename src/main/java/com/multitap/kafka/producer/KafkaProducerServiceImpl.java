@@ -32,4 +32,13 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
         }
     }
 
+    @Override
+    public void sendMemberUuid(MemberUuidDataDto memberUuidDataDto) {
+        try {
+            kafkaTemplate.send("member-data", memberUuidDataDto);
+        } catch (Exception e) {
+            log.info("member-data event send 실패 : " + e);
+            throw new RuntimeException(e);
+        }
+    }
 }

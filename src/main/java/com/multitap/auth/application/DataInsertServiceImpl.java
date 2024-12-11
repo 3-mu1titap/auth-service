@@ -7,6 +7,7 @@ import com.multitap.auth.entity.Role;
 import com.multitap.auth.infrastructure.MemberRepository;
 import com.multitap.kafka.producer.KafkaProducerService;
 import com.multitap.kafka.producer.MemberDto;
+import com.multitap.kafka.producer.MemberUuidDataDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -66,5 +67,15 @@ public class DataInsertServiceImpl implements DataInsertService {
         }
     }
 
+    // 회원 uuid 보내기
+    public void sendMemberData() {
+        List<String> menteeUuid = memberRepository.findUuidsByRole(Role.MENTEE);
+        List<String> mentorUuid = memberRepository.findUuidsByRole(Role.MENTOR);
+        MemberUuidDataDto memberUuidDataDto = MemberUuidDataDto.builder()
+                .menteeUuid(menteeUuid)
+                .mentorUuid(mentorUuid)
+                .build();
+        kafkaProducerService.sendMemberUuid(memberUuidDataDto);
+    }
 }
 

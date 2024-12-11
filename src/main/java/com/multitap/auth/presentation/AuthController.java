@@ -112,4 +112,10 @@ public class AuthController {
         dataInsertService.addMemberFromCsv(file);
         return new BaseResponse<>();
     }
+
+    @GetMapping("/member-data")
+    public BaseResponse<Void> addMemberData() {
+        dataInsertService.sendMemberData();
+        return new BaseResponse<>();
+    }
 }
