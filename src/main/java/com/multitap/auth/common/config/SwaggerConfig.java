@@ -2,7 +2,6 @@ package com.multitap.auth.common.config;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -35,7 +34,7 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components)
 //                .addServersItem(new Server().url(swaggerUri))
-                .addServersItem(new Server().url("/auth-service"))
+//                 .addServersItem(new Server().url("/auth-service"))
                 .info(apiInfo());
     }
 

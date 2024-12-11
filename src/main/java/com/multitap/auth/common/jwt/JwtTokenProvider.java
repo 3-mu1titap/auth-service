@@ -32,12 +32,13 @@ public class JwtTokenProvider {
 
     // 비밀 키를 생성하는 메서드
     private Key getSignKey() {
-        log.info("secretKey : {}", secret);
-        byte[] keyBytes = secret.getBytes();
-        // 키 길이를 256비트로 조정
-        byte[] paddedKeyBytes = new byte[32];
-        System.arraycopy(keyBytes, 0, paddedKeyBytes, 0, Math.min(keyBytes.length, 32));
-        return Keys.hmacShaKeyFor(paddedKeyBytes);
+        // log.info("secretKey : {}", secret);
+        // byte[] keyBytes = secret.getBytes();
+        // // 키 길이를 256비트로 조정
+        // byte[] paddedKeyBytes = new byte[32];
+        // System.arraycopy(keyBytes, 0, paddedKeyBytes, 0, Math.min(keyBytes.length, 32));
+        // return Keys.hmacShaKeyFor(paddedKeyBytes);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     // token 생성
@@ -49,7 +50,9 @@ public class JwtTokenProvider {
         Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
         log.info("refreshToken: {}", refreshTokenValidityInMilliseconds);
 
-        Claims claims = Jwts.claims().setSubject(authUserDetail.getUsername());
+        Claims claims = Jwts.claims();
+        claims.setSubject("auth-service");
+        claims.put("username", authUserDetail.getUsername());
         claims.put("role", authUserDetail.getRole());
 
         String accessToken = Jwts.builder()
@@ -107,4 +110,5 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }

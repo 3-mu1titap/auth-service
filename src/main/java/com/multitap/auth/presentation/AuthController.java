@@ -2,12 +2,15 @@ package com.multitap.auth.presentation;
 
 import com.multitap.auth.application.AuthService;
 import com.multitap.auth.application.BlackListService;
+import com.multitap.auth.application.DataInsertService;
 import com.multitap.auth.application.EmailService;
 import com.multitap.auth.application.MemberService;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
+import com.multitap.auth.dto.out.MentorUuidResponseDto;
 import com.multitap.auth.vo.in.*;
+import com.multitap.auth.vo.out.MentorUuidResponseVo;
 import com.multitap.auth.vo.out.RefreshTokenResponseVo;
 import com.multitap.auth.vo.out.SignInResponseVo;
 import com.multitap.auth.vo.out.UuidResponseVo;
@@ -16,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "계정 관리 API", description = "계정 관련 API endpoints")
 @Slf4j
@@ -26,6 +30,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final EmailService emailService;
+    private final DataInsertService dataInsertService;
     private final BlackListService blackListService;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
@@ -110,5 +115,18 @@ public class AuthController {
     public String getMemberEmail(@RequestParam("userUuid") String userUuid) {
         log.info("check UserUuid in getMemberEmail: {}", userUuid);
         return memberService.findMemberEmailByUuid(userUuid);
+    }
+    @Operation(summary = "전체 멘토 uuid 조회", description = "회원가입 된 모든 멘토 uuid를 조회합니다")
+    @GetMapping("/mentor")
+    public BaseResponse<MentorUuidResponseVo> refreshAccess() {
+        MentorUuidResponseDto mentorUuidResponseDto = authService.getMentorUuid();
+        return new BaseResponse<>(mentorUuidResponseDto.toVo(mentorUuidResponseDto));
+    }
+
+    @Tag(name = "회원 더미 데이터 저장 API", description = "csv 파일로 데이터 저장")
+    @PostMapping(value = "/data", consumes = "multipart/form-data")
+    public BaseResponse<Void> addData(@RequestParam("file") MultipartFile file) {
+        dataInsertService.addMemberFromCsv(file);
+        return new BaseResponse<>();
     }
 }
