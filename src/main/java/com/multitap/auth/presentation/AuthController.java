@@ -4,6 +4,7 @@ import com.multitap.auth.application.AuthService;
 import com.multitap.auth.application.BlackListService;
 import com.multitap.auth.application.DataInsertService;
 import com.multitap.auth.application.EmailService;
+import com.multitap.auth.application.MemberService;
 import com.multitap.auth.common.jwt.JwtTokenProvider;
 import com.multitap.auth.common.response.BaseResponse;
 import com.multitap.auth.dto.in.*;
@@ -32,6 +33,7 @@ public class AuthController {
     private final DataInsertService dataInsertService;
     private final BlackListService blackListService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberService memberService;
     
     //todo: ec2 데이터 값 넣기
 
@@ -108,6 +110,12 @@ public class AuthController {
         return new BaseResponse<>(authService.refreshAccess(RefreshTokenRequestDto.from(jwtToken)).toVo());
     }
 
+    @Operation(summary = "Member Email 받기(FeignClient)", description = "Payment-service 에서 사용되는 API")
+    @GetMapping("/member-email")
+    public String getMemberEmail(@RequestParam("userUuid") String userUuid) {
+        log.info("check UserUuid in getMemberEmail: {}", userUuid);
+        return memberService.findMemberEmailByUuid(userUuid);
+    }
     @Operation(summary = "전체 멘토 uuid 조회", description = "회원가입 된 모든 멘토 uuid를 조회합니다")
     @GetMapping("/mentor")
     public BaseResponse<MentorUuidResponseVo> refreshAccess() {
