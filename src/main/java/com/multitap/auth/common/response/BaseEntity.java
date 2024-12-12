@@ -14,7 +14,7 @@ public abstract class BaseEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt; // 최초 생성일
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt; // 마지막 수정일
 
     @PrePersist // 저장 전에 동작
