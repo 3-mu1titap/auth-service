@@ -30,6 +30,8 @@ public class JwtTokenProvider {
     @Value("${spring.jwt.secret}")
     private String secret;
 
+    //todo: 토큰 시간 변경
+
     // 비밀 키를 생성하는 메서드
     private Key getSignKey() {
         // log.info("secretKey : {}", secret);
